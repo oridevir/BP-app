@@ -328,6 +328,43 @@
      SCREEN 0 — REGISTRATION
 ════════════════════════════════════════════════════ -->
 <div id="scr-reg">
+
+    <!-- iOS/WhatsApp setup banner -->
+    <div id="ios-banner" class="hidden" style="
+        background:linear-gradient(135deg,#0D47A1,#1565C0);
+        color:#fff; padding:18px 18px 20px; font-size:14px;
+        line-height:1.8; box-shadow:0 4px 16px rgba(13,71,161,.4);
+    ">
+        <div style="font-size:19px;font-weight:700;text-align:center;margin-bottom:12px">
+            📱 הגדרה חד-פעמית ל-iPhone
+        </div>
+        <div style="font-size:13.5px;margin-bottom:14px;text-align:center;opacity:.9">
+            כדי שהמדידות <strong>יישמרו</strong> בין ביקורים יש לבצע את הצעדים הבאים <u>פעם אחת בלבד</u>:
+        </div>
+
+        <div style="background:rgba(255,255,255,.13);border-radius:12px;padding:14px 16px;">
+            <div style="margin-bottom:11px">
+                <span style="background:#fff;color:#0D47A1;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;margin-left:8px">1</span>
+                <strong>פתח בספארי</strong><br>
+                <span style="font-size:13px;opacity:.88;padding-right:32px;display:block">
+                    לחץ על <strong>⋯</strong> (שלוש נקודות) בפינה הימנית עליונה ← בחר <strong>"פתח בספארי"</strong>
+                </span>
+            </div>
+            <div style="margin-bottom:4px">
+                <span style="background:#fff;color:#0D47A1;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;margin-left:8px">2</span>
+                <strong>הוסף למסך הבית</strong><br>
+                <span style="font-size:13px;opacity:.88;padding-right:32px;display:block">
+                    בספארי: לחץ על <strong>□↑</strong> (כפתור השיתוף) ← גלול למטה ← <strong>"הוסף למסך הבית"</strong>
+                </span>
+            </div>
+        </div>
+
+        <div style="margin-top:13px;background:rgba(255,255,255,.1);border-radius:8px;padding:10px 13px;font-size:12.5px;text-align:center">
+            לאחר מכן — פתח תמיד מהאייקון במסך הבית ✅<br>
+            <span style="opacity:.8">הנתונים יישמרו אוטומטית בין כל הביקורים</span>
+        </div>
+    </div>
+
     <div class="reg-wrap">
         <div class="reg-hdr">
             <img src="https://drdevir.com/Images/logo.jpg" alt="לוגו המרפאה" class="reg-logo"
@@ -379,6 +416,20 @@
     </div>
     <div class="hdr-user" id="hdr-user"></div>
 </header>
+
+<!-- רצועת אזהרה — מוצגת רק ב-iOS ללא localStorage -->
+<div id="storage-warn-strip" class="hidden" style="
+    background:linear-gradient(135deg,#E65100,#BF360C);
+    color:#fff; padding:9px 16px;
+    font-size:13px; font-weight:600;
+    text-align:center; line-height:1.6;
+    box-shadow:0 2px 8px rgba(191,54,12,.4);
+">
+    ⚠️ הנתונים <u>לא נשמרים</u> — סגירת הדף תמחק הכל<br>
+    <span style="font-size:12px;font-weight:400;opacity:.9">
+        לשמירה קבועה: לחץ <strong>⋯</strong> ← <strong>פתח בספארי</strong> ← הוסף למסך הבית
+    </span>
+</div>
 
 <!-- ════════════════════════════════════════════════════
      SCREEN 1 — MAIN (add measurement)
@@ -519,13 +570,37 @@
 /* ── STATE ── */
 let user = null;
 let meas = [];
+let _store = null;       // localStorage or sessionStorage
+let _persists = false;   // true only if localStorage works
+
+/* ── STORAGE INIT ── */
+(function initStorage() {
+    try {
+        localStorage.setItem('_t','1');
+        if (localStorage.getItem('_t') === '1') {
+            localStorage.removeItem('_t');
+            _store = localStorage; _persists = true; return;
+        }
+    } catch(e) {}
+    try {
+        sessionStorage.setItem('_t','1');
+        sessionStorage.removeItem('_t');
+        _store = sessionStorage;
+    } catch(e) {}
+})();
+
+function lsSet(key, val) { try { if(_store) _store.setItem(key, val); } catch(e) {} }
+function lsGet(key, def) { try { return (_store && _store.getItem(key)) ?? def; } catch(e) { return def; } }
 
 /* ── BOOT ── */
 window.addEventListener('DOMContentLoaded', () => {
     try {
-        user = JSON.parse(localStorage.getItem('bp_user') || 'null');
-        meas = JSON.parse(localStorage.getItem('bp_meas') || '[]');
+        user = JSON.parse(lsGet('bp_user', 'null'));
+        meas = JSON.parse(lsGet('bp_meas', '[]'));
     } catch(e) { meas = []; }
+
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    if (isIOS && !_persists) show('ios-banner');
 
     if (!user) {
         show('scr-reg');
@@ -559,7 +634,7 @@ function resetDT() {
 }
 
 function saveMeas() {
-    localStorage.setItem('bp_meas', JSON.stringify(meas));
+    lsSet('bp_meas', JSON.stringify(meas));
 }
 
 /* ── REGISTRATION ── */
@@ -578,9 +653,12 @@ function registerUser() {
     }
 
     user = { id, fn, ln, ph, em };
-    localStorage.setItem('bp_user', JSON.stringify(user));
+    lsSet('bp_user', JSON.stringify(user));
     hide('scr-reg');
     launchApp();
+    if (!_persists) {
+        setTimeout(() => toast('⚠️ הנתונים לא יישמרו לאחר סגירת הדף! ראה הוראות למעלה.', 't-warn', 7000), 300);
+    }
 }
 
 /* ── LAUNCH APP ── */
@@ -588,6 +666,8 @@ function launchApp() {
     show('hdr');
     show('bot-nav');
     $('hdr-user').textContent = `שלום, ${user.fn} ${user.ln}`;
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    if (isIOS && !_persists) show('storage-warn-strip');
     goTab('main');
 }
 
