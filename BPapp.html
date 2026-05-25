@@ -311,6 +311,25 @@
         .crisis-alert strong { display:block; font-size:15px; margin-bottom:4px; }
         .crisis-alert p { font-size:13px; line-height:1.5; opacity:.92; }
 
+        /* ── RESET ZONE ── */
+        .reset-zone {
+            text-align: center;
+            padding: 6px 0 10px;
+        }
+        .btn-reset {
+            background: none;
+            border: 1px solid #FFCDD2;
+            border-radius: var(--r-sm);
+            color: #B71C1C;
+            font-size: 13px;
+            padding: 9px 20px;
+            cursor: pointer;
+            font-family: inherit;
+            opacity: .75;
+            transition: opacity .2s, background .2s;
+        }
+        .btn-reset:active { opacity: 1; background: #FFEBEE; }
+
         /* ── SAFE AREA ── */
         @supports (padding-bottom: env(safe-area-inset-bottom)) {
             .screen { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
@@ -503,6 +522,10 @@
         <button class="btn btn-pri" onclick="saveMeasurement()">💾 שמור מדידה</button>
     </div>
 
+    <div class="reset-zone">
+        <button class="btn-reset" onclick="resetApp()">🗑 מחק את כל הנתונים והתחל מחדש</button>
+    </div>
+
 </div>
 
 <!-- ════════════════════════════════════════════════════
@@ -539,6 +562,10 @@
             <button class="btn btn-green" onclick="exportCSV()">📥 שמור גיבוי CSV</button>
             <button class="btn btn-wa"    onclick="sendWhatsApp()">💬 שלח לרופא</button>
         </div>
+    </div>
+
+    <div class="reset-zone">
+        <button class="btn-reset" onclick="resetApp()">🗑 מחק את כל הנתונים והתחל מחדש</button>
     </div>
 
 </div>
@@ -803,6 +830,15 @@ function exportCSV() {
     } catch(e) {
         toast('שגיאה בהורדה — נסה בדפדפן אחר', 't-err');
     }
+}
+
+/* ── RESET ── */
+function resetApp() {
+    if (!confirm('האם למחוק את כל הנתונים?\nפרטי המשתמש וכל המדידות יימחקו לצמיתות.')) return;
+    if (!confirm('אישור סופי — הנתונים יימחקו ולא ניתן יהיה לשחזרם.')) return;
+    try { localStorage.clear(); } catch(e) {}
+    try { sessionStorage.clear(); } catch(e) {}
+    location.reload();
 }
 
 /* ── WHATSAPP SEND ── */
