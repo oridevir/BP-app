@@ -45,17 +45,16 @@
         .app-header {
             background: linear-gradient(135deg, var(--pri-dark) 0%, var(--pri) 55%, var(--pri-mid) 100%);
             color: #fff;
-            padding: 14px 18px 12px;
-            display: flex;
+            padding: 16px 16px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             box-shadow: 0 4px 20px rgba(21,101,192,.35);
-            position: sticky;
-            top: 0;
-            z-index: 200;
         }
+        .hdr-center { display:flex; align-items:center; gap:10px; justify-self:center; min-width:0; }
         .hdr-logo {
-            width: 50px; height: 50px;
+            width: 52px; height: 52px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid rgba(255,255,255,.5);
@@ -63,39 +62,128 @@
             flex-shrink: 0;
         }
         .hdr-logo-fb {
-            width:50px; height:50px; border-radius:50%;
+            width:52px; height:52px; border-radius:50%;
             background:rgba(255,255,255,.18);
             border:2px solid rgba(255,255,255,.45);
             display:flex; align-items:center; justify-content:center;
-            font-size:24px; flex-shrink:0;
+            font-size:26px; flex-shrink:0;
         }
-        .hdr-text h1  { font-size:17px; font-weight:700; line-height:1.2; }
-        .hdr-text p   { font-size:12px; opacity:.82; }
-        .hdr-user     { margin-right:auto; font-size:13px; opacity:.85; text-align:left; white-space:nowrap; }
+        .hdr-text { min-width:0; }
+        .hdr-text h1  { font-size:19px; font-weight:800; line-height:1.2; letter-spacing:.01em; text-shadow:0 2px 8px rgba(0,0,0,.18); white-space:nowrap; }
+        .hdr-text p   {
+            display:inline-flex; align-items:center; margin-top:3px;
+            font-size:11px; font-weight:700; letter-spacing:.03em;
+            color:#fff; background:rgba(255,255,255,.16);
+            border:1px solid rgba(255,255,255,.3);
+            border-radius:99px; padding:2px 10px;
+            white-space:nowrap;
+        }
+        .hdr-user     {
+            justify-self:start; min-width:0;
+            font-size:16px; opacity:.85; white-space:nowrap;
+            overflow:hidden; text-overflow:ellipsis;
+        }
 
-        /* ── BOTTOM NAV ── */
-        .bot-nav {
-            position: fixed; bottom:0; left:0; right:0;
-            background: #fff;
-            border-top: 1px solid var(--border);
-            display: flex;
+        /* DEV CREDIT BADGE — same design as the GLP1 calculator app.
+           font-size below is the single scale knob: every other measurement in
+           this block is in em, so resizing the badge resizes the icon, padding,
+           gap and text together, proportionally, automatically. */
+        .dev-credit{
+            justify-self:end;
+            font-size:13px;
+            display:inline-flex; align-items:center; gap:0.72em;
+            padding:0.64em 1em 0.64em 0.5em;
+            border-radius:1.43em;
+            background:linear-gradient(135deg, #43A047 0%, #2E7D32 100%);
+            border:1px solid rgba(255,255,255,.3);
+            color:#fff; text-decoration:none;
+            box-shadow:0 3px 12px rgba(0,0,0,.22);
+            transition:filter .2s ease, transform .2s ease, box-shadow .2s ease;
+            min-width:0; max-width:100%; flex-shrink:0;
+        }
+        .dev-credit-text { overflow:hidden; }
+        .dev-credit-line1, .dev-credit-line2, .dev-credit-line3 { overflow:hidden; text-overflow:ellipsis; }
+        .dev-credit:hover, .dev-credit:focus-visible{
+            filter:brightness(1.1);
+            transform:translateY(-1px);
+            box-shadow:0 6px 18px rgba(0,0,0,.3);
+        }
+        .dev-credit-icon{
+            display:flex; align-items:center; justify-content:center;
+            width:2.86em; height:2.86em; flex-shrink:0;
+            border-radius:50%;
+            background:#fff;
+            line-height:1;
+            box-shadow:0 1px 6px rgba(0,0,0,.25);
+        }
+        .dev-credit-icon-glyph{ font-size:2.2em; line-height:1; }
+        .dev-credit-text{ display:flex; flex-direction:column; align-items:center; gap:0.1em; min-width:0; }
+        .dev-credit-line1{ font-size:0.78em; font-weight:600; opacity:.9; white-space:nowrap; }
+        .dev-credit-line2{ font-size:0.95em; font-weight:800; letter-spacing:.01em; white-space:nowrap; }
+        .dev-credit-line3{ font-size:0.92em; font-weight:700; opacity:.95; white-space:nowrap; }
+        .dev-credit-arrow{ font-size:1em; opacity:.8; display:inline-block; transition:transform .2s ease; }
+        .dev-credit:hover .dev-credit-arrow{ transform:translate(2px,-2px); }
+
+        /* ── HEADER — mobile: stack vertically instead of 3-column row ── */
+        @media (max-width:600px) {
+            .app-header {
+                display:flex;
+                flex-direction:column;
+                align-items:center;
+                gap:8px;
+            }
+            .hdr-center { order:1; }
+            .hdr-user {
+                order:2;
+                text-align:center;
+                white-space:normal;
+                overflow:visible;
+                text-overflow:clip;
+                max-width:100%;
+            }
+            .dev-credit { order:3; max-width:100%; }
+        }
+
+        /* ── TOP WRAPPER (header + tab switcher) ── */
+        .app-top {
             z-index: 200;
-            box-shadow: 0 -4px 20px rgba(21,101,192,.1);
-            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* ── TAB SWITCHER (top, under header) — sliding segmented control ── */
+        .bot-nav {
+            position: relative;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 6px;
+            padding: 8px 10px;
+        }
+        .nav-slider {
+            position: absolute;
+            top: 8px; bottom: 8px; left: 0;
+            width: 0;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #0A1F3D, #1A3A6B);
+            box-shadow: 0 4px 14px rgba(10,31,61,.4);
+            transition: left .32s cubic-bezier(.34,1.1,.4,1), width .32s cubic-bezier(.34,1.1,.4,1);
+            z-index: 0;
         }
         .nav-btn {
-            flex:1; padding:11px 8px 7px;
-            border:none; background:none; cursor:pointer;
-            display:flex; flex-direction:column; align-items:center; gap:3px;
-            color:#9E9E9E; font-size:11px; font-family:inherit;
-            transition: color .2s;
+            position: relative; z-index: 1;
+            flex:1; padding:12px 10px;
+            border:none; border-radius:12px; background:none; cursor:pointer;
+            display:flex; flex-direction:row; align-items:center; justify-content:center; gap:8px;
+            color:#78909C; font-size:14.5px; font-weight:700; font-family:inherit;
+            transition: color .25s;
         }
-        .nav-btn.active { color:var(--pri); }
-        .nav-btn svg { width:24px; height:24px; }
+        .nav-btn.active {
+            color: #fff;
+        }
+        .nav-btn svg { width:22px; height:22px; flex-shrink:0; }
 
         /* ── SCREENS ── */
         .screen {
-            padding: 14px 14px 84px;
+            padding: 14px 14px 32px;
             max-width: 600px;
             margin: 0 auto;
         }
@@ -330,11 +418,6 @@
         }
         .btn-reset:active { opacity: 1; background: #FFEBEE; }
 
-        /* ── SAFE AREA ── */
-        @supports (padding-bottom: env(safe-area-inset-bottom)) {
-            .screen { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
-        }
-
         @media (min-width:480px) {
             .m-grid { gap:14px; }
             .card { padding:22px; }
@@ -423,18 +506,46 @@
 </div>
 
 <!-- ════════════════════════════════════════════════════
-     HEADER (main + history)
+     HEADER + TAB SWITCHER (main + history)
 ════════════════════════════════════════════════════ -->
-<header class="app-header hidden" id="hdr">
-    <img src="https://drdevir.com/Images/logo.jpg" alt="לוגו" class="hdr-logo"
-         onerror="this.style.display='none';document.getElementById('hl-fb').style.display='flex'">
-    <div id="hl-fb" class="hdr-logo-fb" style="display:none">🏥</div>
-    <div class="hdr-text">
-        <h1>מעקב לחץ דם</h1>
-        <p>מרפאת ד"ר דביר</p>
-    </div>
-    <div class="hdr-user" id="hdr-user"></div>
-</header>
+<div class="app-top">
+    <header class="app-header hidden" id="hdr">
+        <div class="hdr-user" id="hdr-user"></div>
+        <div class="hdr-center">
+            <img src="https://drdevir.com/Images/logo.jpg" alt="לוגו" class="hdr-logo"
+                 onerror="this.style.display='none';document.getElementById('hl-fb').style.display='flex'">
+            <div id="hl-fb" class="hdr-logo-fb" style="display:none">🏥</div>
+            <div class="hdr-text">
+                <h1>מעקב לחץ דם</h1>
+                <p>מרפאת ד"ר דביר</p>
+            </div>
+        </div>
+        <a href="https://drdevir.com" target="_blank" rel="noopener" class="dev-credit">
+            <span class="dev-credit-icon"><span class="dev-credit-icon-glyph">⚕️</span></span>
+            <span class="dev-credit-text">
+                <span class="dev-credit-line1">אפליקציה זו נוצרה</span>
+                <span class="dev-credit-line2">על ידי ד״ר אורי דביר</span>
+                <span class="dev-credit-line3">DrDevir.com <span class="dev-credit-arrow">↗</span></span>
+            </span>
+        </a>
+    </header>
+
+    <nav class="bot-nav hidden" id="bot-nav">
+        <span class="nav-slider" id="nav-slider"></span>
+        <button class="nav-btn active" id="nav-main" onclick="goTab('main')">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2a5 5 0 1 1 0 10A5 5 0 0 1 12 2zm0 12c5.33 0 8 2.67 8 4v2H4v-2c0-1.33 2.67-4 8-4z"/>
+            </svg>
+            הזן מדידה
+        </button>
+        <button class="nav-btn" id="nav-hist" onclick="goTab('hist')">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.95 8.95 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21L14 11.86V8H12z"/>
+            </svg>
+            ריכוז מדידות
+        </button>
+    </nav>
+</div>
 
 <!-- רצועת אזהרה — מוצגת רק ב-iOS ללא localStorage -->
 <div id="storage-warn-strip" class="hidden" style="
@@ -570,24 +681,6 @@
 
 </div>
 
-<!-- ════════════════════════════════════════════════════
-     BOTTOM NAV
-════════════════════════════════════════════════════ -->
-<nav class="bot-nav hidden" id="bot-nav">
-    <button class="nav-btn active" id="nav-main" onclick="goTab('main')">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2a5 5 0 1 1 0 10A5 5 0 0 1 12 2zm0 12c5.33 0 8 2.67 8 4v2H4v-2c0-1.33 2.67-4 8-4z"/>
-        </svg>
-        הזן מדידה
-    </button>
-    <button class="nav-btn" id="nav-hist" onclick="goTab('hist')">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.95 8.95 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21L14 11.86V8H12z"/>
-        </svg>
-        ריכוז מדידות
-    </button>
-</nav>
-
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
@@ -706,9 +799,19 @@ function goTab(tab) {
     });
     show(`scr-${tab}`);
     $(`nav-${tab}`) && $(`nav-${tab}`).classList.add('active');
+    moveNavSlider();
     if (tab === 'hist') renderHist();
     if (tab === 'main') resetDT();
 }
+
+function moveNavSlider() {
+    const activeBtn = document.querySelector('.nav-btn.active');
+    const slider = $('nav-slider');
+    if (!activeBtn || !slider) return;
+    slider.style.left  = activeBtn.offsetLeft + 'px';
+    slider.style.width = activeBtn.offsetWidth + 'px';
+}
+window.addEventListener('resize', moveNavSlider);
 
 /* ── ACCORDION ── */
 function toggleAcc(hdr) {
