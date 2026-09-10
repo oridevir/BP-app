@@ -1,0 +1,33 @@
+{
+  "id": "/",
+  "name": "BP — מעקב לחץ דם",
+  "short_name": "BP",
+  "description": "תיעוד ומעקב אחר ערכי לחץ הדם לאורך זמן.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "lang": "he",
+  "dir": "rtl",
+  "background_color": "#EDF4FF",
+  "theme_color": "#1565C0",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
