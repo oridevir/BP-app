@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>מעקב לחץ דם — מרפאת ד"ר דביר</title>
     <!-- קיצור דרך במסך הבית -->
     <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
     <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
     <link rel="manifest" href="manifest.webmanifest">
-    <meta name="theme-color" content="#1565C0">
+    <meta name="theme-color" content="#FBECEC">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="BP">
     <style>
@@ -430,6 +430,256 @@
             .m-grid { gap:14px; }
             .card { padding:22px; }
         }
+        /* ── CONFIRM DIALOG (structure; colours come from the theme) ── */
+        .cfm-overlay {
+            position:fixed; inset:0; z-index:3000;
+            background:rgba(0,0,0,.45);
+            display:flex; align-items:center; justify-content:center; padding:20px;
+        }
+        .cfm {
+            background:#fff; border-radius:20px; padding:24px 20px 18px;
+            width:100%; max-width:320px; text-align:center;
+            box-shadow:0 20px 50px rgba(0,0,0,.35);
+        }
+        .cfm-ic { font-size:28px; margin-bottom:8px; }
+        .cfm-t  { font-size:19px; font-weight:800; color:var(--text); margin-bottom:6px; }
+        .cfm-s  { font-size:15px; color:var(--text2); line-height:1.5; white-space:pre-line; margin-bottom:18px; }
+        .cfm-bt { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .cfm-bt button { font:inherit; font-size:16px; font-weight:700; padding:13px; border-radius:12px; cursor:pointer; }
+        .cfm-no  { background:#fff; border:2px solid var(--border); color:var(--text); }
+        .cfm-yes { background:var(--err); border:none; color:#fff; }
+    </style>
+    <!-- ══ עיצוב "שחר" — שכבת עיצוב (נפרדת כדי ש-@import של הגופנים יעבוד) ══ -->
+    <style id="dawn">
+/* ═══ Direction B — "שחר" (First Light): the night option's sister for daytime.
+   Pearl ground washed with a slow sunrise; frosted milk-glass panels; displays become porcelain wells with luminous coloured digits;
+   the live trace stays (heartbeat for BP, balance wave for BMI) but drawn in ink-colour on light.
+   Identity: BP = sunrise coral-rose, BMI = morning lagoon. ═══ */
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&family=Orbitron:wght@600;700&display=swap');
+
+:root {
+  --pri: #D9416A; --pri-dark: #B02B52; --pri-mid: #F0708F; --pri-light: #FDE6EC;
+  --sky1: #FFD9C7; --sky2: #FFC2D1; --sky3: #E5DAFF; --ink: #3B1F33;
+  --trace: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='44' viewBox='0 0 220 44'%3E%3Cpolyline points='0,24 70,24 80,24 86,14 92,24 100,24 106,4 113,40 119,24 130,24 140,24 148,18 156,24 220,24' fill='none' stroke='%23D9416A' stroke-width='2.2' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E");
+  --trace-speed: 3.4s;
+  --bg: #FBF7F4; --card: rgba(255,255,255,.72); --border: rgba(255,255,255,.9); --text: #2A2430; --text2: #6A5F6B;
+  --shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 18px 40px -22px rgba(120,60,80,.35); --r: 24px; --r-sm: 16px;
+}
+
+body { font-family: 'Heebo', 'Segoe UI', Arial, sans-serif; color: var(--text); font-size: 16px; background: var(--bg); }
+body::before { content: ""; position: fixed; inset: -20%; z-index: -1; pointer-events: none;
+  background: radial-gradient(45% 32% at 80% 4%, var(--sky2), transparent 70%), radial-gradient(45% 36% at 10% 30%, var(--sky1), transparent 70%), radial-gradient(45% 34% at 75% 90%, var(--sky3), transparent 70%);
+  filter: blur(24px); animation: dawn 30s ease-in-out infinite alternate; }
+@keyframes dawn { to { transform: translate(3%, 4%) rotate(6deg) scale(1.06); } }
+
+.app-header { background: transparent; color: var(--ink); box-shadow: none; padding: 22px 16px 54px; position: relative; overflow: hidden; }
+.app-header::after, .reg-hdr::after { content: ""; position: absolute; left: 0; right: 0; bottom: 6px; height: 44px; background: var(--trace) repeat-x 0 0 / 220px 44px; animation: trace var(--trace-speed) linear infinite; opacity: .85;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); }
+@keyframes trace { to { background-position: -220px 0; } }
+.hdr-logo { border: 3px solid #fff; box-shadow: 0 8px 20px -8px rgba(0,0,0,.35); }
+.hdr-text h1 { font-size: 27px; font-weight: 800; text-shadow: none; color: var(--ink); letter-spacing: -.01em; }
+.hdr-text p { background: rgba(255,255,255,.7); border: 1px solid #fff; color: var(--pri-dark); font-size: 12.5px; }
+.hdr-user { color: var(--text2); opacity: 1; font-size: 16.5px; }
+
+.bot-nav { background: rgba(255,255,255,.55); border: 1px solid #fff; border-radius: 20px; margin: 4px 14px 0; padding: 5px; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); position: relative; z-index: 2; box-shadow: 0 10px 24px -16px rgba(0,0,0,.3); }
+.nav-slider { top: 5px; bottom: 5px; border-radius: 15px; background: var(--pri); box-shadow: 0 8px 20px -8px var(--pri); }
+.nav-btn { color: var(--text2); font-size: 16.5px; padding: 14px 10px; }
+.nav-btn.active { color: #fff; }
+
+.screen { padding: 18px 14px 40px; }
+.screen > *, #hist-content > *, #hist-data > * { animation: rise .7s cubic-bezier(.2,.8,.2,1) both; }
+.screen > *:nth-child(2), #hist-content > *:nth-child(2) { animation-delay: .1s; } .screen > *:nth-child(3), #hist-content > *:nth-child(3) { animation-delay: .2s; }
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--shadow); -webkit-backdrop-filter: blur(18px) saturate(1.3); backdrop-filter: blur(18px) saturate(1.3); }
+.card-title { color: var(--ink); font-size: 18.5px; font-weight: 700; }
+label { color: var(--text2); font-size: 15.5px; font-weight: 500; }
+.req { color: var(--pri); }
+.m-field label { color: var(--ink); font-size: 15px; font-weight: 700; }
+.m-unit { color: var(--text2); font-size: 12.5px; }
+
+input[type=text], input[type=tel], input[type=email], input[type=datetime-local], #r-name {
+  background: rgba(255,255,255,.85) !important; border: 1px solid rgba(0,0,0,.08) !important; border-radius: var(--r-sm) !important;
+  color: var(--text) !important; font-size: 17.5px !important; padding: 14px !important; box-shadow: inset 0 1px 3px rgba(0,0,0,.05) !important; }
+input[type=number] {
+  background: radial-gradient(120% 100% at 50% 0%, #fff, var(--pri-light)) !important; border: 1px solid #fff !important; border-radius: 20px !important;
+  box-shadow: inset 0 3px 10px rgba(0,0,0,.08), 0 0 0 1px color-mix(in srgb, var(--pri) 20%, transparent), 0 12px 24px -16px var(--pri) !important;
+  font-family: 'Orbitron', 'Heebo', sans-serif !important; font-weight: 700 !important; color: var(--pri-dark) !important; }
+input[type=number]::placeholder { color: color-mix(in srgb, var(--pri) 25%, transparent); font-family: 'Heebo', sans-serif; font-weight: 500; }
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+#ms, #md, #mp { font-size: 31px; padding: 18px 2px; }
+.weight-input { font-size: 52px !important; padding: 26px 8px !important; }
+#r-age, #r-height { font-size: 24px !important; }
+input:focus { border-color: var(--pri) !important; box-shadow: inset 0 3px 10px rgba(0,0,0,.06), 0 0 0 3px var(--pri-light), 0 12px 28px -12px var(--pri) !important; }
+
+.btn { border-radius: 18px; font-size: 18px; padding: 17px; position: relative; overflow: hidden; }
+.btn-pri { background: linear-gradient(100deg, var(--pri-dark), var(--pri) 55%, var(--pri-mid)); box-shadow: 0 14px 28px -12px var(--pri), inset 0 1px 0 rgba(255,255,255,.4); }
+.btn-pri::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 35%, rgba(255,255,255,.5) 50%, transparent 65%); transform: translateX(120%); animation: sweep 4.5s ease-in-out infinite 1.2s; }
+@keyframes sweep { 0%, 70% { transform: translateX(120%); } 100% { transform: translateX(-120%); } }
+.btn-green { background: rgba(255,255,255,.8); color: var(--ink); border: 1px solid #fff; box-shadow: 0 10px 22px -14px rgba(0,0,0,.35); }
+.btn-wa { background: linear-gradient(100deg, #179B5B, #23BE73); box-shadow: 0 14px 26px -14px #23BE73; }
+.btn-reset { border-color: rgba(176,43,82,.25); color: #A3304F; background: rgba(255,255,255,.5); font-size: 14.5px; border-radius: 14px; }
+
+.acc-item { border: 1px solid #fff; border-radius: 18px; background: rgba(255,255,255,.6); }
+.acc-hdr { background: transparent; color: var(--ink); font-size: 16.5px; font-weight: 500; padding: 17px 16px; }
+.acc-hdr.open { background: var(--pri-light); }
+.acc-hdr .chev { color: var(--pri); }
+.acc-body { background: #fff; }
+.acc-body p, .acc-body ul { font-size: 15.5px; color: #2f2a33; }
+.acc-body strong { color: var(--pri-dark); }
+
+table.hist { font-size: 15.5px; }
+table.hist th { background: transparent; color: var(--text2); font-weight: 500; border-bottom: 2px solid var(--pri-light); font-size: 13.5px; }
+table.hist td { border-bottom: 1px solid rgba(0,0,0,.06); padding: 13px 6px; }
+table.hist tbody tr:nth-child(even) td { background: transparent; }
+table.hist tbody tr:first-child td { background: var(--pri-light); }
+.num-big, table.hist td strong { color: var(--ink); }
+table.hist tfoot td { background: transparent !important; color: var(--pri-dark); border-top: 2px solid var(--pri); font-family: inherit; font-weight: 800; font-size: 16px; padding: 16px 6px; }
+.tbl-wrap { margin: 0; } table.hist td:last-child { padding-inline: 10px 4px; }
+.badge { font-size: 13px; padding: 4px 10px; }
+.chart-title { color: var(--ink); font-size: 16.5px; }
+
+.bmi-box { background: radial-gradient(120% 100% at 50% 0%, #fff, var(--pri-light)); border: 1px solid #fff; border-radius: 20px; box-shadow: inset 0 3px 10px rgba(0,0,0,.06), 0 0 0 1px color-mix(in srgb, var(--pri) 20%, transparent); }
+.bmi-val { font-family: 'Orbitron', sans-serif; font-size: 44px; color: var(--pri-dark) !important; }
+.bmi-label { font-size: 18px; } .bmi-sub { color: var(--text2); font-size: 13.5px; }
+.gender-opt { background: rgba(255,255,255,.8); border: 1px solid #fff; color: var(--text2); font-size: 16.5px; border-radius: 16px; box-shadow: 0 8px 18px -14px rgba(0,0,0,.3); }
+.gender-opt.selected { background: var(--pri-light); border-color: var(--pri); color: var(--pri-dark); }
+
+.milestone-overlay { background: rgba(40,30,40,.35); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.milestone-modal { background: radial-gradient(120% 80% at 50% 0%, var(--pri-light), #fff 70%); border: 1px solid #fff; box-shadow: 0 30px 60px -20px rgba(0,0,0,.35); }
+.ms-title { color: var(--pri-dark); font-size: 36px; } .ms-sub strong { color: var(--pri); }
+
+.reg-hdr { position: relative; padding-bottom: 56px; }
+.reg-hdr::after { left: -14px; right: -14px; bottom: 4px; }
+.reg-logo { border: 4px solid #fff; box-shadow: 0 14px 30px -12px rgba(0,0,0,.35); width: 96px; height: 96px; }
+.reg-hdr h2 { color: var(--ink); font-size: 32px; font-weight: 800; }
+.reg-hdr p { color: var(--text2); font-size: 16.5px; }
+.toast { border-radius: 18px; font-size: 16px; }
+@media (prefers-reduced-motion: reduce) { body::before, .app-header::after, .reg-hdr::after, .btn-pri::after, .screen > *, #hist-content > * { animation: none !important; } }
+
+/* ── keep the history table inside the card (bigger type must not push the delete column off-screen) ── */
+.tbl-wrap { overflow-x: auto !important; }
+table.hist { font-size: 14.5px !important; min-width: 0 !important; }
+table.hist th { font-size: 13px !important; padding: 10px 3px !important; }
+table.hist td { padding: 12px 3px !important; }
+table.hist td strong, table.hist .num-big { font-size: 16px !important; }
+table.hist .badge { font-size: 12px !important; padding: 3px 7px !important; }
+.btn-del { padding: 4px 6px !important; }
+
+/* ── credit: a slim glass line at the bottom of every screen (footer sits at the screen's foot when content is short) ── */
+body { display: flex; flex-direction: column; }
+.screen, #scr-reg { width: 100%; }
+.app-footer { margin-top: auto; padding: 6px 16px calc(16px + env(safe-area-inset-bottom, 0px)); text-align: center; }
+.app-footer .dev-credit { display: inline-flex; align-items: center; gap: 8px; max-width: 100%;
+  padding: 4px 12px 4px 5px; border-radius: 99px; font-size: 12px; text-decoration: none; color: var(--text2);
+  background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.9); box-shadow: 0 6px 16px -12px rgba(0,0,0,.35);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transform: none; filter: none; }
+.app-footer .dev-credit:hover, .app-footer .dev-credit:focus-visible { color: var(--ink); border-color: var(--pri-light); box-shadow: 0 8px 20px -12px var(--pri); transform: none; filter: none; }
+.app-footer .dev-credit-icon { width: 22px; height: 22px; background: var(--pri-light); box-shadow: none; }
+.app-footer .dev-credit-icon-glyph { font-size: 13px; }
+.app-footer .dev-credit-text { flex-direction: row; flex-wrap: nowrap; white-space: nowrap; justify-content: center; align-items: baseline; gap: 0 4px; }
+.app-footer .dev-credit-line1, .app-footer .dev-credit-line2 { font-size: 1em; font-weight: 400; opacity: 1; letter-spacing: 0; }
+.app-footer .dev-credit-line3 { font-size: 1em; font-weight: 700; color: var(--pri-dark); opacity: 1; }
+.app-footer .dev-credit-line3::before { content: "·"; margin-left: 4px; color: var(--text2); font-weight: 400; }
+@media (max-width: 370px) { .app-footer .dev-credit-text { flex-wrap: wrap; white-space: normal; } .app-footer .dev-credit { border-radius: 18px; } }
+
+/* ── messages (toasts) in the Dawn palette: success = the app's own colour, warning = honey, error = deep plum with a coral mark ── */
+.toast { border-radius: 18px; font-size: 16px; font-weight: 600; line-height: 1.45; padding: 14px 18px;
+  border: 1px solid rgba(255,255,255,.55); box-shadow: 0 18px 40px -16px rgba(50,25,45,.5);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; gap: 10px; }
+.toast.t-ok { background: linear-gradient(100deg, var(--pri-dark), var(--pri) 60%, var(--pri-mid)); color: #fff; }
+.toast.t-warn { background: #FFF2D9; color: #6A4200; border-color: #F2CD86; }
+.toast.t-err { background: #3B2536; color: #FFEFF3; border-color: rgba(255,255,255,.14); }
+.toast.t-err::before { content: "!"; flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+  background: #FF8A80; color: #3B2536; font-weight: 900; font-size: 15px; }
+
+/* ── history actions in the Dawn palette: "send to doctor" is the main action, backup is the quiet one ── */
+.btn-wa { background: linear-gradient(100deg, var(--pri-dark), var(--pri) 55%, var(--pri-mid)); color: #fff; border: none;
+  box-shadow: 0 14px 28px -12px var(--pri), inset 0 1px 0 rgba(255,255,255,.4); }
+.btn-green { background: rgba(255,255,255,.8); color: var(--pri-dark); border: 1.5px solid color-mix(in srgb, var(--pri) 35%, #fff);
+  box-shadow: 0 10px 22px -16px rgba(0,0,0,.35); }
+.btn-del { color: var(--text2) !important; opacity: .65; }
+.btn-del:hover, .btn-del:focus-visible { color: var(--pri-dark) !important; opacity: 1; }
+
+/* ── confirm dialog in Dawn: frosted pearl card, the app's colour for "cancel", deep plum for the destructive choice ── */
+.cfm-overlay { background: rgba(40,30,40,.35); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); animation: cfm-fade .2s ease both; }
+.cfm { background: radial-gradient(120% 80% at 50% 0%, var(--pri-light), #fff 70%); border: 1px solid #fff; border-radius: 26px; padding: 26px 20px 18px;
+  box-shadow: 0 30px 60px -20px rgba(40,20,40,.5); animation: cfm-pop .28s cubic-bezier(.2,1.2,.4,1) both; }
+.cfm-ic { width: 54px; height: 54px; border-radius: 50%; margin: 0 auto 12px; display: grid; place-items: center; background: #fff; font-size: 24px; box-shadow: 0 8px 18px -10px rgba(0,0,0,.35); }
+.cfm-t { color: var(--ink); font-size: 20px; line-height: 1.3; }
+.cfm-s { color: var(--text2); font-size: 15.5px; }
+.cfm-bt button { border-radius: 16px; font-size: 17px; font-weight: 800; padding: 14px; }
+.cfm-no { background: #fff; color: var(--pri-dark); border: 1.5px solid color-mix(in srgb, var(--pri) 35%, #fff); }
+.cfm-yes { background: #3B2536; color: #fff; box-shadow: 0 12px 24px -12px rgba(59,37,54,.8); }
+.cfm-bt button:focus-visible { outline: 3px solid var(--pri); outline-offset: 2px; }
+@keyframes cfm-fade { from { opacity: 0; } } @keyframes cfm-pop { from { opacity: 0; transform: scale(.92) translateY(8px); } }
+@media (prefers-reduced-motion: reduce) { .cfm, .cfm-overlay { animation: none; } }
+
+/* ── weight categories in Dawn tints (approved: sky / teal / rose-berry; overweight = peach (approved)) ── */
+/* Option A — soft Dawn tints, filled chips (meaning kept: blue=under, green-teal=normal, honey=over, rose-berry=obesity) */
+.b-u { background: #E4EEFB !important; color: #2C5A94 !important; } .b-n { background: #DDF3EE !important; color: #0B6B62 !important; }
+.b-ow { background: #FDE4D6 !important; color: #9A421A !important; } .b-ob { background: #FBE2E8 !important; color: #9E2F4E !important; }
+.bmi-label.bmi-u { color: #2C5A94 !important; } .bmi-label.bmi-n { color: #0B6B62 !important; } .bmi-label.bmi-ow { color: #A9481C !important; } .bmi-label.bmi-ob { color: #A3304F !important; }
+.bmi-ref-tbl tbody tr:nth-child(1) td { background: #E4EEFB !important; } .bmi-ref-tbl tbody tr:nth-child(2) td { background: #DDF3EE !important; }
+.bmi-ref-tbl tbody tr:nth-child(3) td { background: #FDE4D6 !important; } .bmi-ref-tbl tbody tr:nth-child(4) td { background: #FBE2E8 !important; }
+.bmi-ref-tbl tbody tr:nth-child(1) td[style] { color: #2C5A94 !important; } .bmi-ref-tbl tbody tr:nth-child(2) td[style] { color: #0B6B62 !important; }
+.bmi-ref-tbl tbody tr:nth-child(3) td[style] { color: #9A421A !important; } .bmi-ref-tbl tbody tr:nth-child(4) td[style] { color: #9E2F4E !important; }
+.bmi-ref-tbl th { background: var(--pri-dark) !important; }
+.acc-body-inner > div[style*="E8F5E9"] { background: #DDF3EE !important; border-color: #A9DDD3 !important; }
+.acc-body-inner > div[style*="E8F5E9"] div { color: #0B4F48 !important; }
+.acc-body-inner > div[style*="EDF4FF"] { background: #FBF7F4 !important; border-color: #EADFD8 !important; }
+.acc-body-inner > div[style*="EDF4FF"] div[style*="font-size:16px"] { color: var(--pri-dark) !important; }
+.acc-body-inner > div[style*="FFF8E1"] { background: #FFF4DE !important; border-right-color: #E3A33C !important; }
+.acc-body-inner > div[style*="FFF8E1"] div[style*="E65100"] { color: #875400 !important; }
+.acc-body-inner > div[style*="font-size:12px"] { color: var(--pri-dark) !important; }
+
+.toast.t-warn { background: #FFE8DC !important; color: #7A3414 !important; border-color: #F5BFA3 !important; }
+/* ── centred section titles on every screen ── */
+.card-title { justify-content: center; text-align: center; }
+.chart-title { text-align: center; }
+.acc-body-inner > div[style*="font-size:12px"] { text-align: center; }
+
+/* ── registration screen: identical geometry in both apps (same top gap to the logo, same side margins) ── */
+#scr-reg { max-width: 600px; margin: 0 auto; padding: 0 14px 40px !important; }
+#scr-reg .reg-wrap { margin: 0 auto; }
+#scr-reg .reg-hdr { padding-top: 36px !important; }
+
+/* ── BP "מידע חשוב": soft tiles — rose for "what is blood pressure", teal for "how to measure", tips as numbered rows ── */
+#scr-main > .card:first-child { background: linear-gradient(165deg, #FFF0F3 0%, #FFF7F1 100%); border-color: #fff; }
+#scr-main .acc-item { border: none; border-radius: 18px; box-shadow: 0 8px 18px -14px rgba(120,40,70,.45); margin-bottom: 10px; background: #fff; }
+#scr-main .acc-item:nth-of-type(2) .acc-hdr { background: #FFE4EA; }
+#scr-main .acc-item:nth-of-type(3) .acc-hdr { background: #E6F3F1; }
+#scr-main .acc-item:nth-of-type(3) .acc-hdr .chev { color: #0F8F86; }
+#scr-main .acc-hdr { font-weight: 700; padding: 17px 16px; }
+#scr-main .acc-hdr.open { filter: saturate(1.15); }
+#scr-main .acc-body { background: #fff; }
+#scr-main .acc-body p { background: #FFF6F8; border-radius: 12px; padding: 10px 12px; }
+#scr-main .acc-body ul { list-style: none; padding: 0; counter-reset: tip; }
+#scr-main .acc-body li { counter-increment: tip; position: relative; padding: 10px 44px 10px 12px; margin-bottom: 6px; background: #F2F9F8; border-radius: 12px; line-height: 1.55; }
+#scr-main .acc-body li::before { content: counter(tip); position: absolute; right: 10px; top: 10px; width: 24px; height: 24px; border-radius: 50%; background: #0F8F86; color: #fff; font-weight: 800; font-size: 13px; display: grid; place-items: center; }
+#scr-main .acc-item:nth-of-type(3) .acc-body strong { color: #0A6E67; }
+
+/* ── iPhone/WhatsApp notices in Dawn (both apps): a pearl card with numbered steps, and a peach warning strip ── */
+.ios-banner { margin: 14px 0 0; padding: 16px 16px 14px; border-radius: 22px; background: rgba(255,255,255,.82); border: 1px solid #fff;
+  box-shadow: var(--shadow); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); color: var(--ink); line-height: 1.6; }
+.ib-title { font-size: 18px; font-weight: 800; text-align: center; margin-bottom: 4px; }
+.ib-lead { font-size: 14.5px; color: var(--text2); text-align: center; margin-bottom: 12px; }
+.ib-steps { display: grid; gap: 8px; }
+.ib-step { display: flex; align-items: flex-start; gap: 10px; background: var(--pri-light); border-radius: 14px; padding: 10px 12px; font-size: 15px; }
+.ib-num { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--pri); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 14px; margin-top: 1px; }
+.ib-how { display: block; font-size: 14px; color: var(--text2); }
+.ib-foot { margin-top: 12px; font-size: 14.5px; text-align: center; }
+.ib-foot span { color: var(--text2); font-size: 13.5px; }
+.storage-warn-strip { margin: 10px 14px 0; padding: 10px 14px; border-radius: 16px; background: #FFE8DC; color: #7A3414; border: 1px solid #F5BFA3;
+  font-size: 14px; font-weight: 600; line-height: 1.6; text-align: center; }
+.storage-warn-strip span { font-size: 13px; font-weight: 400; }
+
+/* ── "no measurements yet": the same card in both apps ── */
+.empty { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); color: var(--text2); }
+
+/* ── wide screens: the tab switcher keeps the content's width ── */
+.bot-nav { width: calc(100% - 28px); max-width: 572px; margin: 4px auto 0; }
     </style>
 </head>
 <body>
@@ -440,39 +690,14 @@
 <div id="scr-reg">
 
     <!-- iOS/WhatsApp setup banner -->
-    <div id="ios-banner" class="hidden" style="
-        background:linear-gradient(135deg,#0D47A1,#1565C0);
-        color:#fff; padding:18px 18px 20px; font-size:14px;
-        line-height:1.8; box-shadow:0 4px 16px rgba(13,71,161,.4);
-    ">
-        <div style="font-size:19px;font-weight:700;text-align:center;margin-bottom:12px">
-            📱 הגדרה חד-פעמית ל-iPhone
+    <div id="ios-banner" class="ios-banner hidden">
+        <div class="ib-title">📱 הגדרה חד-פעמית ל-iPhone</div>
+        <div class="ib-lead">כדי שהמדידות <strong>יישמרו</strong> בין ביקורים יש לבצע את הצעדים הבאים <u>פעם אחת בלבד</u>:</div>
+        <div class="ib-steps">
+            <div class="ib-step"><span class="ib-num">1</span><div><strong>פתח בספארי</strong><span class="ib-how">לחץ על <strong>⋯</strong> (שלוש נקודות) בפינה הימנית עליונה ← בחר <strong>"פתח בספארי"</strong></span></div></div>
+            <div class="ib-step"><span class="ib-num">2</span><div><strong>הוסף למסך הבית</strong><span class="ib-how">בספארי: לחץ על <strong>□↑</strong> (כפתור השיתוף) ← גלול למטה ← <strong>"הוסף למסך הבית"</strong></span></div></div>
         </div>
-        <div style="font-size:13.5px;margin-bottom:14px;text-align:center;opacity:.9">
-            כדי שהמדידות <strong>יישמרו</strong> בין ביקורים יש לבצע את הצעדים הבאים <u>פעם אחת בלבד</u>:
-        </div>
-
-        <div style="background:rgba(255,255,255,.13);border-radius:12px;padding:14px 16px;">
-            <div style="margin-bottom:11px">
-                <span style="background:#fff;color:#0D47A1;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;margin-left:8px">1</span>
-                <strong>פתח בספארי</strong><br>
-                <span style="font-size:13px;opacity:.88;padding-right:32px;display:block">
-                    לחץ על <strong>⋯</strong> (שלוש נקודות) בפינה הימנית עליונה ← בחר <strong>"פתח בספארי"</strong>
-                </span>
-            </div>
-            <div style="margin-bottom:4px">
-                <span style="background:#fff;color:#0D47A1;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;margin-left:8px">2</span>
-                <strong>הוסף למסך הבית</strong><br>
-                <span style="font-size:13px;opacity:.88;padding-right:32px;display:block">
-                    בספארי: לחץ על <strong>□↑</strong> (כפתור השיתוף) ← גלול למטה ← <strong>"הוסף למסך הבית"</strong>
-                </span>
-            </div>
-        </div>
-
-        <div style="margin-top:13px;background:rgba(255,255,255,.1);border-radius:8px;padding:10px 13px;font-size:12.5px;text-align:center">
-            לאחר מכן — פתח תמיד מהאייקון במסך הבית ✅<br>
-            <span style="opacity:.8">הנתונים יישמרו אוטומטית בין כל הביקורים</span>
-        </div>
+        <div class="ib-foot">לאחר מכן — פתח תמיד מהאייקון במסך הבית ✅<br><span>הנתונים יישמרו אוטומטית בין כל הביקורים</span></div>
     </div>
 
     <div class="reg-wrap">
@@ -500,7 +725,7 @@
                 <input type="text" id="r-ln" placeholder="שם משפחה" autocomplete="family-name">
             </div>
             <div class="fg">
-                <label>טלפון <span class="req">*</span></label>
+                <label>טלפון</label>
                 <input type="tel" id="r-ph" placeholder="050-0000000" inputmode="tel" autocomplete="tel">
             </div>
             <div class="fg">
@@ -528,14 +753,6 @@
                 <p>מרפאת ד"ר דביר</p>
             </div>
         </div>
-        <a href="https://drdevir.com" target="_blank" rel="noopener" class="dev-credit">
-            <span class="dev-credit-icon"><span class="dev-credit-icon-glyph">⚕️</span></span>
-            <span class="dev-credit-text">
-                <span class="dev-credit-line1">אפליקציה זו נוצרה</span>
-                <span class="dev-credit-line2">על ידי ד״ר אורי דביר</span>
-                <span class="dev-credit-line3">DrDevir.com <span class="dev-credit-arrow">↗</span></span>
-            </span>
-        </a>
     </header>
 
     <nav class="bot-nav hidden" id="bot-nav">
@@ -556,17 +773,9 @@
 </div>
 
 <!-- רצועת אזהרה — מוצגת רק ב-iOS ללא localStorage -->
-<div id="storage-warn-strip" class="hidden" style="
-    background:linear-gradient(135deg,#E65100,#BF360C);
-    color:#fff; padding:9px 16px;
-    font-size:13px; font-weight:600;
-    text-align:center; line-height:1.6;
-    box-shadow:0 2px 8px rgba(191,54,12,.4);
-">
+<div id="storage-warn-strip" class="storage-warn-strip hidden">
     ⚠️ הנתונים <u>לא נשמרים</u> — סגירת הדף תמחק הכל<br>
-    <span style="font-size:12px;font-weight:400;opacity:.9">
-        לשמירה קבועה: לחץ <strong>⋯</strong> ← <strong>פתח בספארי</strong> ← הוסף למסך הבית
-    </span>
+    <span>לשמירה קבועה: לחץ <strong>⋯</strong> ← <strong>פתח בספארי</strong> ← הוסף למסך הבית</span>
 </div>
 
 <!-- ════════════════════════════════════════════════════
@@ -642,7 +851,7 @@
     </div>
 
     <div class="reset-zone">
-        <button class="btn-reset" onclick="resetApp()">🗑 מחק את כל הנתונים והתחל מחדש</button>
+        <button class="btn-reset" onclick="resetApp()">🗑️ מחק את כל הנתונים והתחל מחדש</button>
     </div>
 
 </div>
@@ -684,10 +893,22 @@
     </div>
 
     <div class="reset-zone">
-        <button class="btn-reset" onclick="resetApp()">🗑 מחק את כל הנתונים והתחל מחדש</button>
+        <button class="btn-reset" onclick="resetApp()">🗑️ מחק את כל הנתונים והתחל מחדש</button>
     </div>
 
 </div>
+
+<!-- קרדיט — בתחתית כל המסכים -->
+<footer class="app-footer">
+    <a href="https://drdevir.com" target="_blank" rel="noopener" class="dev-credit">
+        <span class="dev-credit-icon"><span class="dev-credit-icon-glyph">⚕️</span></span>
+        <span class="dev-credit-text">
+            <span class="dev-credit-line1">אפליקציה זו נוצרה</span>
+            <span class="dev-credit-line2">על ידי ד״ר אורי דביר</span>
+            <span class="dev-credit-line3">DrDevir.com <span class="dev-credit-arrow">↗</span></span>
+        </span>
+    </a>
+</footer>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
@@ -746,6 +967,42 @@ function $(id) { return document.getElementById(id); }
 function show(id) { $(id) && $(id).classList.remove('hidden'); }
 function hide(id) { $(id) && $(id).classList.add('hidden'); }
 
+/* ── CONFIRM DIALOG — in-app replacement for the phone's own confirmation window ── */
+function askConfirm(opts) {
+    const o = Object.assign({ icon: '🗑', title: '', text: '', ok: 'מחיקה', cancel: 'ביטול' }, opts);
+    return new Promise(resolve => {
+        const prevFocus = document.activeElement;
+        const wrap = document.createElement('div');
+        wrap.className = 'cfm-overlay';
+        wrap.innerHTML =
+            '<div class="cfm" role="alertdialog" aria-modal="true" aria-labelledby="cfm-t" aria-describedby="cfm-s">' +
+            '<div class="cfm-ic" aria-hidden="true"></div><div class="cfm-t" id="cfm-t"></div><div class="cfm-s" id="cfm-s"></div>' +
+            '<div class="cfm-bt"><button type="button" class="cfm-no"></button><button type="button" class="cfm-yes"></button></div></div>';
+        wrap.querySelector('.cfm-ic').textContent = o.icon;
+        wrap.querySelector('.cfm-t').textContent  = o.title;
+        wrap.querySelector('.cfm-s').textContent  = o.text;
+        const no  = wrap.querySelector('.cfm-no');
+        const yes = wrap.querySelector('.cfm-yes');
+        no.textContent = o.cancel; yes.textContent = o.ok;
+        function close(answer) {
+            document.removeEventListener('keydown', onKey);
+            wrap.remove();
+            if (prevFocus && prevFocus.focus) prevFocus.focus();
+            resolve(answer);
+        }
+        function onKey(e) {
+            if (e.key === 'Escape') close(false);
+            if (e.key === 'Tab') { e.preventDefault(); (document.activeElement === no ? yes : no).focus(); }
+        }
+        no.addEventListener('click',  () => close(false));
+        yes.addEventListener('click', () => close(true));
+        wrap.addEventListener('click', e => { if (e.target === wrap) close(false); });
+        document.addEventListener('keydown', onKey);
+        document.body.appendChild(wrap);
+        no.focus();
+    });
+}
+
 function toast(msg, type='t-ok', ms=3200) {
     const el = $('toast');
     el.textContent = msg;
@@ -773,7 +1030,7 @@ function registerUser() {
     const ph = $('r-ph').value.trim();
     const em = $('r-em').value.trim();
 
-    if (!id || !fn || !ln || !ph) {
+    if (!id || !fn || !ln) {
         toast('נא למלא את כל השדות המסומנים בכוכבית ✳', 't-err'); return;
     }
     if (!/^\d{8,9}$/.test(id)) {
@@ -857,8 +1114,13 @@ function saveMeasurement() {
 }
 
 /* ── DELETE ── */
-function delMeas(id) {
-    if (!confirm('האם למחוק את המדידה?')) return;
+async function delMeas(id) {
+    const m = meas.find(x => x.id === id);
+    const ok = await askConfirm({
+        title: 'למחוק את המדידה?',
+        text: (m ? `${fmtDate(m.ts)}, ${fmtTime(m.ts)} · ${m.sys}/${m.dia} · דופק ${m.pul}\n` : '') + 'אי אפשר לשחזר אותה אחרי המחיקה.'
+    });
+    if (!ok) return;
     meas = meas.filter(m => m.id !== id);
     saveMeas();
     renderHist();
@@ -920,7 +1182,7 @@ function exportCSV() {
     const sorted = [...meas].sort((a,b) => new Date(a.ts) - new Date(b.ts));
     let csv = '﻿'; // BOM for Excel Hebrew
     csv += `מעקב לחץ דם — ${user.fn} ${user.ln}\n`;
-    csv += `ת.ז.: ${user.id}  |  טלפון: ${user.ph}\n\n`;
+    csv += `ת.ז.: ${user.id}` + (user.ph ? `  |  טלפון: ${user.ph}` : '') + `\n\n`;
     csv += `תאריך,שעה,סיסטולי,דיאסטולי,דופק\n`;
     sorted.forEach(m => {
         csv += `${fmtDateFull(m.ts)},${fmtTime(m.ts)},${m.sys},${m.dia},${m.pul}\n`;
@@ -944,9 +1206,9 @@ function exportCSV() {
 }
 
 /* ── RESET ── */
-function resetApp() {
-    if (!confirm('האם למחוק את כל הנתונים?\nפרטי המשתמש וכל המדידות יימחקו לצמיתות.')) return;
-    if (!confirm('אישור סופי — הנתונים יימחקו ולא ניתן יהיה לשחזרם.')) return;
+async function resetApp() {
+    if (!await askConfirm({ icon: '⚠️', title: 'האם למחוק את כל הנתונים ולהתחיל מחדש?', text: 'פרטי המשתמש וכל המדידות יימחקו לצמיתות.', ok: 'המשך' })) return;
+    if (!await askConfirm({ icon: '⚠️', title: 'אישור סופי', text: 'הנתונים יימחקו ולא ניתן יהיה לשחזרם.', ok: 'מחיקה סופית' })) return;
     try { localStorage.clear(); } catch(e) {}
     try { sessionStorage.clear(); } catch(e) {}
     location.reload();
@@ -963,7 +1225,7 @@ function sendWhatsApp() {
 
     let msg = `מדידות לחץ דם — ${user.fn} ${user.ln}\n`;
     msg += `ת.ז.: ${user.id}\n`;
-    msg += `טלפון: ${user.ph}\n`;
+    if (user.ph) msg += `טלפון: ${user.ph}\n`;
     msg += `─────────────────────────\n`;
     msg += `תאריך      שעה    סיס  דיא  דפק\n`;
 

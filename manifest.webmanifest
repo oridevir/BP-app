@@ -8,8 +8,8 @@
   "display": "standalone",
   "lang": "he",
   "dir": "rtl",
-  "background_color": "#EDF4FF",
-  "theme_color": "#1565C0",
+  "background_color": "#FBF7F4",
+  "theme_color": "#FBECEC",
   "icons": [
     {
       "src": "icons/icon-192.png",
