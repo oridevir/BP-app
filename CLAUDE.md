@@ -6,10 +6,10 @@
 
 ## מחסנית טכנולוגית
 
-- **קובץ יחיד**: `index.html` — HTML + CSS + JavaScript. `BPapp.html` הוא עותק זהה, לקישור הישן — כל שינוי ב-`index.html` מעתיקים גם אליו
+- **קובץ יחיד**: `index.html` — HTML + CSS + JavaScript. `BPapp.html` הוא דף העברה קטן לקישור הישן (מעביר אוטומטית ל-`./`) — לא נוגעים בו בשינויים באפליקציה
 - **תלויות חיצוניות**: גופנים מ-Google Fonts (Heebo, Orbitron) דרך `@import` בבלוק העיצוב. בלי רשת — גופני מערכת, האפליקציה עובדת
 - **אחסון**: `localStorage` (עם fallback ל-`sessionStorage`)
-- **פריסה**: GitHub Pages מענף `main` — `https://bp.drdevir.com` (וגם `https://bp.drdevir.com/BPapp.html`, אותו מקור ואותם נתונים)
+- **פריסה**: GitHub Pages מענף `main` — `https://bp.drdevir.com` (הקישור הישן `https://bp.drdevir.com/BPapp.html` מעביר לכתובת הראשית — אותו מקור ואותם נתונים)
 - **ריפו**: `https://github.com/oridevir/BP-app`
 - **שפת ממשק**: עברית, RTL
 
@@ -77,10 +77,9 @@ localStorage['bp_meas'] = [ { id, ts, sys, dia, pul }, ... ]
 
 ```bash
 # עריכה מקומית — פותחים את index.html בדפדפן לבדיקה
-# אחרי כל שינוי: cp index.html BPapp.html
 
 # עבודה בענף נפרד, ואחרי אישור — מיזוג ל-main (מפעיל GitHub Pages אוטומטית)
-git add index.html BPapp.html
+git add index.html
 git commit -m "תיאור השינוי"
 ```
 
