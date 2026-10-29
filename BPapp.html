@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>מעקב לחץ דם — מרפאת ד"ר דביר</title>
@@ -680,7 +680,18 @@ body { display: flex; flex-direction: column; }
 
 /* ── wide screens: the tab switcher keeps the content's width ── */
 .bot-nav { width: calc(100% - 28px); max-width: 572px; margin: 4px auto 0; }
-    </style>
+    
+/* ── accessibility (WCAG 2.1 AA, ת"י 5568): same hues, a notch deeper wherever text fell under 4.5:1 (3:1 for large text) ── */
+.nav-slider { background: #C93A61; }
+.btn-pri, .btn-wa, .toast.t-ok { background: linear-gradient(100deg, var(--pri-dark), #C93A61) !important; }
+.btn-reset { opacity: 1 !important; }
+input::placeholder { color: var(--text2) !important; }
+input[type=number]::placeholder { color: #C0587A !important; }
+.m-unit { color: #5A4F5B; }
+#scr-main .acc-item:nth-of-type(3) .acc-body strong { color: #085B55; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+</style>
 </head>
 <body>
 
