@@ -691,6 +691,36 @@ input::placeholder { color: var(--text2) !important; }
 #scr-main .acc-item:nth-of-type(3) .acc-body strong { color: #085B55; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+
+/* ═══ About window (click on the clinic logo) ═══ */
+.logo-info { position: relative; display: inline-block; line-height: 0; cursor: pointer; border-radius: 50%; }
+.logo-info::after { content: "i"; position: absolute; bottom: 0; left: 0; width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; color: #C93A61; font: italic 700 12px/18px Georgia, serif; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,.35); transition: transform .15s; }
+.reg-hdr .logo-info::after { bottom: 14px; }
+.logo-info:hover::after, .logo-info:focus-visible::after { transform: scale(1.15); }
+.logo-info:focus-visible { outline: 3px solid #C93A61; outline-offset: 3px; }
+.about-ov { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: 16px;
+  background: rgba(40,30,40,.4); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.about-ov[hidden] { display: none; }
+.about-box { width: min(440px, 100%); max-height: calc(100vh - 32px); display: flex; flex-direction: column; background: #fff;
+  border: 1px solid #fff; border-radius: 26px; overflow: hidden; box-shadow: 0 24px 60px -20px rgba(0,0,0,.45); }
+.about-head { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 16px 20px;
+  background: linear-gradient(100deg, var(--pri-dark), #C93A61); color: #fff; }
+.about-head img { width: 42px; height: 42px; border-radius: 11px; box-shadow: 0 0 0 2px #fff; }
+.about-head h2 { margin: 0; font-size: 22px; font-weight: 800; color: #fff; }
+.about-body { overflow: auto; padding: 18px 22px 22px; text-align: center; font-size: 16px; line-height: 1.6; color: var(--text);
+  background: radial-gradient(120% 80% at 50% 0%, var(--pri-light), #fff 70%); }
+.about-body p { margin: 0 0 10px; text-wrap: pretty; }
+.about-body hr { border: 0; border-top: 1px solid rgba(0,0,0,.1); margin: 12px 0; }
+.about-body h3 { margin: 0 0 6px; font-size: 16.5px; color: var(--pri-dark); }
+.about-body a { color: var(--pri-dark); font-weight: 700; }
+.about-body ol { margin: 0 0 8px; padding: 0; list-style: none; counter-reset: s; }
+.about-body ol li { counter-increment: s; margin: 0 0 5px; text-wrap: pretty; }
+.about-body ol li::before { content: counter(s); display: inline-block; width: 22px; height: 22px; line-height: 22px; border-radius: 50%;
+  background: #C93A61; color: #fff; font-weight: 700; font-size: 13px; margin-inline-end: 6px; }
+.about-body .bless { font-weight: 800; color: var(--pri-dark); font-size: 17px; margin: 0; }
+.about-body .about-close { display: block; width: 100%; margin-top: 16px; padding: 12px 16px; font-size: 16px; font-weight: 700; font-family: inherit;
+  border: none; border-radius: 14px; color: #fff; cursor: pointer; background: linear-gradient(100deg, var(--pri-dark), #C93A61); }
 </style>
 </head>
 <body>
@@ -713,9 +743,9 @@ input::placeholder { color: var(--text2) !important; }
 
     <div class="reg-wrap">
         <div class="reg-hdr">
-            <img src="https://drdevir.com/Images/logo.jpg" alt="לוגו המרפאה" class="reg-logo"
+            <span class="logo-info" role="button" tabindex="0" title="אודות האפליקציה" aria-label="אודות האפליקציה" onclick="openAbout()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAbout();}"><img src="https://drdevir.com/Images/logo.jpg" alt="לוגו המרפאה" class="reg-logo"
                  onerror="this.style.display='none';document.getElementById('rl-fb').style.display='flex'">
-            <div id="rl-fb" class="reg-logo-fb" style="display:none">🏥</div>
+            <div id="rl-fb" class="reg-logo-fb" style="display:none">🏥</div></span>
             <h2>ברוכים הבאים</h2>
             <p>מערכת מעקב לחץ דם<br>מרפאת ד"ר דביר</p>
         </div>
@@ -756,9 +786,9 @@ input::placeholder { color: var(--text2) !important; }
     <header class="app-header hidden" id="hdr">
         <div class="hdr-user" id="hdr-user"></div>
         <div class="hdr-center">
-            <img src="https://drdevir.com/Images/logo.jpg" alt="לוגו" class="hdr-logo"
+            <span class="logo-info" role="button" tabindex="0" title="אודות האפליקציה" aria-label="אודות האפליקציה" onclick="openAbout()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAbout();}"><img src="https://drdevir.com/Images/logo.jpg" alt="לוגו" class="hdr-logo"
                  onerror="this.style.display='none';document.getElementById('hl-fb').style.display='flex'">
-            <div id="hl-fb" class="hdr-logo-fb" style="display:none">🏥</div>
+            <div id="hl-fb" class="hdr-logo-fb" style="display:none">🏥</div></span>
             <div class="hdr-text">
                 <h1>מעקב לחץ דם</h1>
                 <p>מרפאת ד"ר דביר</p>
@@ -1252,6 +1282,46 @@ function sendWhatsApp() {
     const url = `https://wa.me/972555588571?text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank');
 }
+</script>
+
+<!-- About window: opens from the clinic logo -->
+<div class="about-ov" id="about-ov" hidden>
+  <div class="about-box" role="dialog" aria-modal="true" aria-labelledby="about-t">
+    <div class="about-head"><img src="icons/icon.svg" alt="" width="42" height="42"><h2 id="about-t">מעקב לחץ דם</h2></div>
+    <div class="about-body">
+      <p><b>מעקב לחץ דם</b> היא אפליקציה פשוטה למעקב אחר מדידות לחץ דם בבית. מזינים כל מדידה — לחץ עליון, לחץ תחתון ודופק — והאפליקציה מרכזת אותן בטבלה עם ממוצעים, ושולחת את הריכוז לרופא בוואטסאפ בלחיצה אחת.</p>
+      <p>הפרטים והמדידות נשמרים רק במכשיר שלך ולא נשלחים לשום שרת. הם יוצאים מהמכשיר רק כשבוחרים לשלוח אותם לרופא.</p>
+      <hr>
+      <h3>איך משתמשים</h3>
+      <ol><li>נרשמים פעם אחת, עם השם ומספר הזהות</li><li>מודדים לפי ההנחיות שב"מידע חשוב", ומזינים כל מדידה</li><li>בסוף התקופה: "ריכוז מדידות" ← שליחה לרופא</li></ol>
+      <p>באייפון: פותחים את הקישור בספארי ומוסיפים למסך הבית — כך הנתונים נשמרים בין ביקור לביקור.</p>
+      <hr>
+      <p>האפליקציה פותחה ע״י <b>ד״ר אורי דביר</b>.<br>כלים רפואיים דיגיטליים נוספים, למטופלים ולקהילה הרפואית, זמינים באתר <a href="https://drdevir.com" target="_blank" rel="noopener" dir="ltr">DrDevir.com</a><span class="sr-only-about"> (נפתח בחלון חדש)</span>.</p>
+      <p>לפניות, הצעות והערות: <a href="mailto:Clinic@DrDevir.com" dir="ltr">Clinic@DrDevir.com</a></p>
+      <hr>
+      <p class="bless">בריאות שלמה!</p>
+      <button type="button" class="about-close" id="about-close">סגירה</button>
+    </div>
+  </div>
+</div>
+<style>.sr-only-about{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}</style>
+<script>
+(function () {
+  var ov = document.getElementById('about-ov'), opener = null, downOnBackdrop = false;
+  window.openAbout = function () {
+    opener = document.activeElement;
+    ov.hidden = false;
+    document.getElementById('about-close').focus({ preventScroll: true });
+    ov.querySelector('.about-body').scrollTop = 0;
+  };
+  function closeAbout() { ov.hidden = true; if (opener && opener.focus) opener.focus(); }
+  document.getElementById('about-close').addEventListener('click', closeAbout);
+  // Close on the backdrop only when the click both started and ended there
+  // (selecting text and releasing outside must not close the window)
+  ov.addEventListener('mousedown', function (e) { downOnBackdrop = e.target === ov; });
+  ov.addEventListener('click', function (e) { if (e.target === ov && downOnBackdrop) closeAbout(); downOnBackdrop = false; });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !ov.hidden) closeAbout(); });
+})();
 </script>
 </body>
 </html>
