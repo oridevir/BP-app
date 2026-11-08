@@ -98,3 +98,6 @@ git commit -m "תיאור השינוי"
 - **רופא**: ד"ר דביר
 - **לוגו**: `https://drdevir.com/Images/logo.jpg` (עם fallback emoji 🏥)
 - **וואטסאפ רופא**: `972555588571` (בשימוש בפונקציית sendWhatsApp)
+
+## קידום בגוגל (2026-11-08)
+בראש `index.html`: תיאור לעמוד, canonical ו-Open Graph (תמונה: `icons/icon-512.png`). בשורש: `robots.txt` ו-`sitemap.xml`. שינוי בכותרת או בתיאור — לעדכן גם את תגיות `og:`.
