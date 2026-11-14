@@ -460,7 +460,12 @@
         .cfm-bt button { font:inherit; font-size:16px; font-weight:700; padding:13px; border-radius:12px; cursor:pointer; }
         .cfm-no  { background:#fff; border:2px solid var(--border); color:var(--text); }
         .cfm-yes { background:var(--err); border:none; color:#fff; }
-    </style>
+    
+/* קישור להצהרת הנגישות בפוטר + טקסט לקורא מסך בלבד (נובמבר 2026) */
+.a11y-statement { display:inline-block; margin-top:6px; padding:3px 10px; border-radius:999px; background:rgba(255,255,255,.85); font-size:12.5px; color:var(--text); text-decoration:underline; text-underline-offset:2px; } /* רקע בהיר משלו — במחשב חלק מהפוטרים יושבים על רקע כהה */
+.a11y-statement:hover, .a11y-statement:focus-visible { color:var(--ink); }
+.a11y-sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+</style>
     <!-- ══ עיצוב "שחר" — שכבת עיצוב (נפרדת כדי ש-@import של הגופנים יעבוד) ══ -->
     <style id="dawn">
 /* ═══ Direction B — "שחר" (First Light): the night option's sister for daytime.
@@ -766,23 +771,23 @@ input::placeholder { color: var(--text2) !important; }
             <div class="card-title">📋 פרטי המטופל</div>
 
             <div class="fg">
-                <label>מספר זהות <span class="req">*</span></label>
+                <label for="r-id">מספר זהות <span class="req">*</span></label>
                 <input type="text" id="r-id" inputmode="numeric" maxlength="9">
             </div>
             <div class="fg">
-                <label>שם פרטי <span class="req">*</span></label>
+                <label for="r-fn">שם פרטי <span class="req">*</span></label>
                 <input type="text" id="r-fn" autocomplete="given-name">
             </div>
             <div class="fg">
-                <label>שם משפחה <span class="req">*</span></label>
+                <label for="r-ln">שם משפחה <span class="req">*</span></label>
                 <input type="text" id="r-ln" autocomplete="family-name">
             </div>
             <div class="fg">
-                <label>טלפון</label>
+                <label for="r-ph">טלפון</label>
                 <input type="tel" id="r-ph" inputmode="tel" autocomplete="tel">
             </div>
             <div class="fg">
-                <label>כתובת מייל</label>
+                <label for="r-em">כתובת מייל</label>
                 <input type="email" id="r-em" inputmode="email" autocomplete="email">
             </div>
 
@@ -960,7 +965,10 @@ input::placeholder { color: var(--text2) !important; }
             <span class="dev-credit-line2">על ידי ד״ר אורי דביר</span>
             <span class="dev-credit-line3">DrDevir.com <span class="dev-credit-arrow">↗</span></span>
         </span>
+        <span class="a11y-sr"> (נפתח בחלון חדש)</span>
     </a>
+    <!-- הצהרת הנגישות של drdevir.com חלה גם על האפליקציה (חובה בחוק: דרך להגיע להצהרה מכל אתר) -->
+    <div><a href="https://drdevir.com/accessibility-statement.html" target="_blank" rel="noopener" class="a11y-statement">הצהרת נגישות<span class="a11y-sr"> (נפתח בחלון חדש)</span></a></div>
 </footer>
 
 <!-- Toast -->
@@ -1308,7 +1316,7 @@ function sendWhatsApp() {
       <ol><li>נרשמים פעם אחת, עם השם ומספר הזהות</li><li>מודדים לפי ההנחיות שב"מידע חשוב", ומזינים כל מדידה</li><li>בסוף התקופה: "ריכוז מדידות" ← שליחה לרופא</li></ol>
       <p>(באייפון: פותחים את הקישור בספארי ומוסיפים למסך הבית — כך הנתונים נשמרים בין ביקור לביקור.)</p>
       <hr>
-      <p>האפליקציה פותחה ע״י <b>ד״ר אורי דביר</b>.<br>כלים רפואיים דיגיטליים נוספים, למטופלים ולקהילה הרפואית, זמינים באתר <a href="https://drdevir.com" target="_blank" rel="noopener" dir="ltr">DrDevir.com</a><span class="sr-only-about"> (נפתח בחלון חדש)</span>.</p>
+      <p>האפליקציה פותחה ע״י <b>ד״ר אורי דביר</b>.<br>כלים רפואיים דיגיטליים נוספים, למטופלים ולקהילה הרפואית, זמינים באתר <a href="https://drdevir.com" target="_blank" rel="noopener" dir="ltr">DrDevir.com<span class="sr-only-about"> (נפתח בחלון חדש)</span></a>.</p>
       <p>לפניות, הצעות והערות: <a href="mailto:Clinic@DrDevir.com" dir="ltr">Clinic@DrDevir.com</a></p>
       <hr>
       <p class="bless">בריאות שלמה!</p>
