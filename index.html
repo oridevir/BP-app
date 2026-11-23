@@ -1172,6 +1172,8 @@ function saveMeasurement() {
     resetDT();
 
     toast(`✅ נשמר: ${sys}/${dia} דופק ${pul}`, 't-ok');
+    goTab('hist');            // מעבר אוטומטי לריכוז המדידות אחרי שמירה
+    window.scrollTo(0, 0);
 }
 
 /* ── DELETE ── */
