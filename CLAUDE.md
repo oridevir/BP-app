@@ -49,7 +49,7 @@ localStorage['bp_meas'] = [ { id, ts, sys, dia, pul }, ... ]
 | `initStorage()` | בודק localStorage, נופל ל-sessionStorage אם חסום |
 | `registerUser()` | אימות ושמירת פרטי מטופל, מעבר לאפליקציה |
 | `launchApp()` | הצגת header + nav, הצגת אזהרת iOS אם רלוונטי |
-| `saveMeasurement()` | אימות וולידציה, שמירת מדידה עם timestamp |
+| `saveMeasurement()` | אימות וולידציה, שמירת מדידה עם timestamp, ואז מעבר אוטומטי ל"ריכוז מדידות" (`goTab('hist')`) — כמו באפליקציית המשקל (2026-11-23) |
 | `renderHist()` | בניית טבלת היסטוריה עם ממוצעים בfooter |
 | `exportCSV()` | ייצוא כל המדידות לקובץ CSV עם BOM לעברית ב-Excel |
 | `sendWhatsApp()` | בניית הודעת טקסט מפורמטת ופתיחת wa.me |
